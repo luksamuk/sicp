@@ -1,0 +1,210 @@
+#+TITLE:  SICP Exercises for Chapter 01
+#+DESCRIPTION: Answers for exercises of the book Structure and Interpretation of Computer Programs.
+#+AUTHOR: Lucas Vieira
+#+LANGUAGE: en-us
+#+OPTIONS: toc:nil
+
+* Exercise 1.1
+#+BEGIN_SRC text
+  10 ;; => 10
+
+  (+ 5 3 4) ;; => 12
+
+  (- 9 1) ;; => 8
+
+  (/ 6 2) ;; => 3
+
+  (+ (* 2 4) (- 4 6)) ;; => 6
+
+  (define a 3) ;; => a
+
+  (define b (+ a 1)) ;; => b
+
+  (+ a b (* a b)) ;; => 19
+
+  (= a b) ;; => #f
+
+  (if (and (> b a) (< b (* a b)))
+      b
+      a) ;; => 4
+
+  (cond ((= a 4) 6)
+        ((= b 4) (+ 6 7 a))
+        (else 25)) ;; => 16
+
+  (+ 2 (if (> b a) b a)) ;; => 6
+
+  (* (cond ((> a b) a)
+           ((< a b) b)
+           (else -1))
+     (+ a 1)) ;; => 16
+#+END_SRC
+
+* Exercise 1.2
+#+BEGIN_SRC scheme
+  (/ (+ 5 4 (- 2 3 (+ 6 (/ 4 5))))
+     (* 3 (- 6 2) (- 2 7)))
+#+END_SRC
+
+* Exercise 1.3
+#+BEGIN_SRC scheme
+  (define (square-of-two-largest x y z)
+    (cond ((> x y)
+           (+ (* x x)
+              (if (> y z)
+                  (* y y)
+                  (* z z))))
+          (else
+           (+ (* y y)
+              (if (> x z)
+                  (* x x)
+                  (* z z))))))
+#+END_SRC
+
+* Exercise 1.4
+The conditional inside the expression yields a different operation with respect to
+the value of =b=. This operation is, then, applied to =a= and =b=.
+
+* Exercise 1.5
+When the interpreter uses applicative-order evaluation, the procedure yields correctly
+the value =0=, since when evaluating the conditional contained in the body of the expression,
+it only evaluates the predicate, finds it to be true, and then proceeds to yield the result
+of the evaluation of the consequent. However, in normal-order evaluation, the interpreter
+will proceed as expected until after the predicate evaluation; at this point, it will attempt
+to evaluate not only the consequent, but also the alternative, which will force the program to
+enter an infinite behaviour.
+
+* Exercise 1.6
+When Alyssa attempts to use this new implementation, the program will end up in an infinite loop.
+Since =new-if= is implemented as a function, whenever it is called, it will attempt to evaluate
+the predicate, the consequent and the alternative, before actually getting to the conditional
+statement. This will result in the calling of =sqrt-iter=, even when the program is supposed to
+stop.
+
+* Exercise 1.7
+=good-enough?=, as currently given, can easily be show to not work on very small or very large
+numbers, since it uses a fixed number (=0.001=) as a way to determine if the difference is small
+enough. This means that calculations such as
+
+#+BEGIN_SRC scheme
+  (sqrt 1000000)
+  (sqrt 0.0000001)
+#+END_SRC
+
+will most likely take quite a while to catch up with their expected values, though their results
+can be quicker to calculate through other means. [TODO: failure? I need to talk about it, these
+statements might be wrong!]
+
+We may, then, design a =square-root= procedure which takes the guess and watches how it evolves,
+and then stop when the change is a very small fraction of the guess:
+
+#+BEGIN_SRC scheme
+  (define (good-enough? guess old-guess)
+    (< (abs (- guess old-guess))
+       (/ guess 10000)))
+
+  (define (average x y)
+    (/ (+ x y) 2))
+
+  (define (improve guess x)
+    (average guess (/ x guess)))
+
+  (define (sqrt-iter guess old-guess x)
+    (if (good-enough? guess old-guess)
+        guess
+        (sqrt-iter (improve guess x)
+                   guess
+                   x)))
+
+  (define (sqrt x)
+    (sqrt-iter 1.0 0.0 x))
+#+END_SRC
+
+* Exercise 1.8
+In this example, we use the =good-enough?= algorithm from the previous exercise. The heavy
+changes, when compared to the square root algorithm, happen on the =improve-cb= procedure.
+
+#+BEGIN_SRC scheme
+  (define (good-enough? guess old-guess)
+    (< (abs (- guess old-guess))
+       (/ guess 10000)))
+
+  (define (improve-cb guess x)
+    (/ (+ (/ x (square guess))
+          (* 2 guess))
+       3))
+
+  (define (cbrt-iter guess old-guess x)
+    (if (good-enough? guess old-guess)
+        guess
+        (cbrt-iter (improve-cb guess x)
+                   guess
+                   x)))
+
+  (define (cbrt x)
+    (cbrt-iter 1.0 0.0 x))
+#+END_SRC
+
+* Exercise 1.9
+First method:
+#+BEGIN_SRC text
+  (+ 4 5)
+  (inc (+ (dec 4) 5))
+  (inc (+ 3 5))
+  (inc (inc (+ (dec 3) 5)))
+  (inc (inc (+ 2 5)))
+  (inc (inc (inc (+ (dec 2) 5))))
+  (inc (inc (inc (+ 1 5))))
+  (inc (inc (inc (inc (+ (dec 1) 5)))))
+  (inc (inc (inc (inc (+ 0 5)))))
+  (inc (inc (inc (inc 5))))
+  (inc (inc (inc 6)))
+  (inc (inc 7))
+  (inc 8)
+  9
+#+END_SRC
+This is a linear recursive process.
+
+Second method:
+#+BEGIN_SRC text
+  (+ 4 5)
+  (+ (dec 4) (inc 5))
+  (+ 3 6)
+  (+ (dec 3) (inc 6))
+  (+ 2 7)
+  (+ (dec 2) (inc 7))
+  (+ 1 8)
+  (+ (dec 1) (inc 8))
+  (+ 0 9)
+  9
+#+END_SRC
+This is a linear iterative process.
+
+* Exercise 1.10
+For this exercise, instead of evaluating a linear recursive process by hand, I gave up and
+had Chez Scheme evaluate the results for me.
+#+BEGIN_SRC text
+  (A 1 10) => 1024
+  (A 2 4)  => 65536
+  (A 3 3)  => 65536
+#+END_SRC
+
+Concise mathematical definitions:
+#+BEGIN_SRC text
+  (f n) => 2n
+  (g n) => 2^n
+  (h n) => 2^n²
+  (k n) => 5n²
+#+END_SRC
+
+* Exercise 1.11 (unfinished)
+=f='s rules for reference:
+#+BEGIN_SRC text
+  f(n) = n                                 (for n < 3)
+  f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3)  (for n >= 3)
+#+END_SRC
+
+Now we compute a procedure that calculates =f(n)= through an iterative process.
+#+BEGIN_SRC scheme
+
+#+END_SRC

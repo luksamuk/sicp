@@ -1,0 +1,29 @@
+#+TITLE: SICP Exercises
+#+DESCRIPTION: Answers for the exercises on the book Structure and Interpretation of Computer Programs, written by Harold Abelson, Gerald Jay Sussman and Julie Sussman.
+#+AUTHOR: Lucas Vieira
+#+LANGUAGE: en-us
+#+OPTIONS: toc:nil
+
+* What?
+
+I wanted to keep track of the exercises I've been answering. Notice that the answers here contained are not necessarily the best approach, and also
+may not be correct. So don't be a douche and think that you can straight up copy or cheat by not answering the book's exercises because, if you can't do it
+without cheating, you're not learning anything at all.
+
+* Why?
+
+Again, I wanted to keep track of it. And since these answers are not really a secret, I figured I'd just throw them in a repo.
+Also, while I'm at it, I'm trying to use org-mode for these studies; this way I can learn more about the format, and also take full advantage of its fantastic
+support on Emacs.
+
+* When?
+
+Answers will appear here whenever I find free time and whenever I'm not stuck at something.
+Someone said that some answers might demand a little bit more of advanced math so, if such a thing appears before me, I may end up trying to study the underlying
+math before trying to answer the exercise as well.
+I won't lie, I'll try to get some tips here and there from a few online communities which I think will be of great help, however I'm not going to copy anything
+from anyone, as it will simply not help me grow in terms of knowledge -- and you should follow the same principle.
+
+* Copyright?
+
+There is none. This is public knowledge, not software per se. Use whatever I write here at your own risk.
