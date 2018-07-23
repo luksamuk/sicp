@@ -8,6 +8,9 @@ All exercises involving actual programming were tested under Chez Scheme.
 
 #+TOC: headlines 1
 
+[fn:ex1-7] This solution is still a problem for small numbers and needs to be revisited.
+
+
 * Exercise 1.1
 #+BEGIN_SRC text
   10 ;; => 10
@@ -85,7 +88,7 @@ the predicate, the consequent and the alternative, before actually getting to th
 statement. This will result in the calling of =sqrt-iter=, even when the program is supposed to
 stop.
 
-* Exercise 1.7[fn:ex1-7]
+* Exercise 1.7
 
 =good-enough?=, as currently given, can easily be show to not work on very small or very large
 numbers, since it uses a fixed number (=0.001=) as a way to determine if the difference is small
@@ -100,7 +103,7 @@ will most likely take quite a while to catch up with their expected values, thou
 can be quicker to calculate through other means. [TODO: failure? I need to talk about it, these
 statements might be wrong!]
 
-We may, then, design a =square-root= procedure which takes the guess and watches how it evolves,
+We may, then, design a =square-root= procedure[fn:ex1-7] which takes the guess and watches how it evolves,
 and then stop when the change is a very small fraction of the guess:
 
 #+BEGIN_SRC scheme
@@ -300,9 +303,3 @@ This solution assumes base-0 and valid indexes.
     (if (>= iterations 2)
         (fib-prove-iter 2 iterations)))
 #+END_SRC
-* Exercise 1.14
-
-
-
-
-[fn:ex1-7] This solution might still not work so well for small numbers.

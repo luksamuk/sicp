@@ -4,6 +4,9 @@
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
 
+*** Progress
+Currently heading to Exercise 1.14.
+
 * What?
 
 I wanted to keep track of the exercises I've been answering. Notice that the answers here contained are not necessarily the best approach, and also
@@ -24,6 +27,6 @@ math before trying to answer the exercise as well.
 I won't lie, I'll try to get some tips here and there from a few online communities which I think will be of great help, however I'm not going to copy anything
 from anyone, as it will simply not help me grow in terms of knowledge -- and you should follow the same principle.
 
-* Copyright?
+* Copyright
 
 There is none. This is public knowledge, not software per se. Use whatever I write here at your own risk.
