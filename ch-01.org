@@ -275,7 +275,7 @@ This solution assumes base-0 and valid indexes.
   (define (fib-approx n)
     (inexact->exact
      (round (/ (- (expt *phi* n)
-                  (expt *psi*  n))
+                  (expt *psi* n))
                (sqrt 5)))))
 
 

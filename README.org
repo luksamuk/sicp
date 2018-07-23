@@ -1,6 +1,7 @@
 #+TITLE: SICP: Exercises's Solutions
 #+DESCRIPTION: Answers for the exercises on the book Structure and Interpretation of Computer Programs, written by Harold Abelson, Gerald Jay Sussman and Julie Sussman.
-#+AUTHOR: Lucas Vieira <lucasvieira@lisp.com.br>
+#+AUTHOR: Lucas Vieira
+#+EMAIL: lucasvieira@lisp.com.br
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
 
