@@ -1,12 +1,6 @@
-#+TITLE:  SICP: Exercises for Chapter 01
 #+DESCRIPTION: Answers for exercises of the book Structure and Interpretation of Computer Programs.
-#+AUTHOR: Lucas Vieira
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
-
-All exercises involving actual programming were tested under Chez Scheme.
-
-#+TOC: headlines 1
 
 [fn:ex1-7] This solution is still a problem for small numbers and needs to be revisited.
 

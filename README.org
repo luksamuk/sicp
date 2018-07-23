@@ -1,6 +1,6 @@
-#+TITLE: SICP Exercises
+#+TITLE: SICP: Exercises's Solutions
 #+DESCRIPTION: Answers for the exercises on the book Structure and Interpretation of Computer Programs, written by Harold Abelson, Gerald Jay Sussman and Julie Sussman.
-#+AUTHOR: Lucas Vieira
+#+AUTHOR: Lucas Vieira <lucasvieira@lisp.com.br>
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
 
@@ -12,6 +12,8 @@ Currently heading to Exercise 1.14.
 I wanted to keep track of the exercises I've been answering. Notice that the answers here contained are not necessarily the best approach, and also
 may not be correct. So don't be a douche and think that you can straight up copy or cheat by not answering the book's exercises because, if you can't do it
 without cheating, you're not learning anything at all.
+
+All exercises involving actual programming were tested under Chez Scheme.
 
 * Why?
 
