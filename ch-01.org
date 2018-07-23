@@ -197,7 +197,7 @@ Concise mathematical definitions:
   (k n) => 5n²
 #+END_SRC
 
-* Exercise 1.11 (unfinished)
+* Exercise 1.11
 =f='s rules for reference:
 #+BEGIN_SRC text
   f(n) = n                                 (for n < 3)
@@ -206,5 +206,33 @@ Concise mathematical definitions:
 
 Now we compute a procedure that calculates =f(n)= through an iterative process.
 #+BEGIN_SRC scheme
+  (define (f-iter n count back2 back1 curr)
+    (cond ((= count n) curr)
+          (else (f-iter n (1+ count) back1 curr
+                        (+ curr
+                           (* 2 back1)
+                           (* 3 back2))))))
 
+  (define (f n)
+    (cond ((< n 3) n)
+          (else (f-iter 2 0 1 2))))
+#+END_SRC
+
+For comparision, here is the recursive process:
+#+BEGIN_SRC scheme
+  (define (f-recursive n)
+    (cond ((< n 3) n)
+          (else (+ (f-recursive (1- n))
+                   (* 2 (f-recursive (- n 2)))
+                   (* 3 (f-recursive (- n 3)))))))
+#+END_SRC
+
+* Exercise 1.12
+#+BEGIN_SRC scheme
+  (define (pascal-element level n)
+    (cond ((or (= n 0)
+               (= n level)) 1)
+          (else (+ (pascal-element (1- level)
+                                   (1- n))
+                   (pascal-element (1- level) n)))))
 #+END_SRC
