@@ -6,7 +6,7 @@
 #+OPTIONS: toc:nil
 
 *** Progress
-Currently heading to Exercise 1.14.
+Currently heading to Exercise 1.16.
 
 * What?
 

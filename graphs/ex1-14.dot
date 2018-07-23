@@ -1,0 +1,98 @@
+// To be honest, this graph can only have its
+// logic followed when it is being constructed.
+// I tried to encapsulate stuff in levels, but
+// I don't think it was enough. Just refer to
+// the generated image.
+
+digraph {
+    // Labels to avoid cycles
+    res0 [label="0", shape="plaintext"];
+    res1 [label="0", shape="plaintext"];
+    res2 [label="0", shape="plaintext"];
+    res3 [label="0", shape="plaintext"];
+    ret1 [label="...", shape="plaintext"];
+    res4 [label="0", shape="plaintext"];
+    res5 [label="0", shape="plaintext"];
+    res6 [label="0", shape="plaintext"];
+    res7 [label="0", shape="plaintext"];
+    res8 [label="1", shape="plaintext"];
+    res9 [label="0", shape="plaintext"];
+    res10 [label="0", shape="plaintext"];
+    res11 [label="1", shape="plaintext"];
+    res12 [label="0", shape="plaintext"];
+    res13 [label="1", shape="plaintext"];
+    res14 [label="0", shape="plaintext"];
+    ret2 [label="...", shape="plaintext"];
+    res15 [label="0", shape="plaintext"];
+    res16 [label="1", shape="plaintext"];
+
+    repnod0 [label="cc 1 2"];
+    repnod1 [label="cc 1 1"];
+    repnod2 [label="cc -4 2"];
+    repnod3 [label="cc 1 1"];
+    repnod4 [label="cc 1 0"];
+    repnod5 [label="cc 0 1"];
+    repnod6 [label="cc 1 0"];
+    repnod7 [label="cc 0 1"];
+    repnod8 [label="cc 1 0"];
+    repnod9 [label="cc 0 1"];
+    
+    // Root
+    "count-change 11" -> "cc 11 5";
+
+    // Level 1
+    "cc 11 5" -> {"cc 11 4" "cc -39 5"};
+
+    // Level 2
+    "cc -39 5" -> res0;
+    "cc 11 4" -> {"cc 11 3" "cc -14 4"};
+
+    // Level 3
+    "cc -14 4" -> res1;
+    "cc 11 3" -> {"cc 11 2" "cc 1 3"};
+
+    // Level 4
+    "cc 11 2" -> {"cc 11 1" "cc 6 2"};
+    "cc 1 3" -> {"cc 1 2" "cc -9 3"};
+
+    // Level 5
+    "cc -9 3" -> res2;
+    "cc 1 2" -> {"cc 1 1" "cc -4 2"};
+    "cc 11 1" -> {"cc 11 0" "cc 10 1"};
+    "cc 6 2" -> {"cc 6 1" repnod0};
+
+    // Level 6
+    "cc 11 0" -> res3;
+    "cc 10 1" -> ret1;
+    "cc 6 1" -> {"cc 6 0" "cc 5 1"};
+    repnod0 -> {repnod1 repnod2};
+    "cc 1 1" -> {"cc 1 0" "cc 0 1"};
+    "cc -4 2" -> res6;
+
+    // Level 7
+    ret1 -> repnod3;
+    "cc 6 0" -> res4;
+    "cc 5 1" -> {"cc 5 0" "cc 4 1"};
+    repnod1 -> {repnod4 repnod5};
+    repnod2 -> res5;
+    "cc 1 0" -> res7;
+    "cc 0 1" -> res8;
+    
+    // Level 8
+    repnod3 -> {repnod6 repnod7};
+    "cc 5 0" -> res9;
+    "cc 4 1" -> {"cc 4 0" "cc 3 1"};
+    repnod4 -> res10;
+    repnod5 -> res11;
+
+    // Level 9
+    repnod6 -> res12;
+    repnod7 -> res13;
+    "cc 4 0" -> res14;
+    "cc 3 1" -> ret2;
+
+    // Level ???
+    ret2 -> {repnod8 repnod9};
+    repnod8 -> res15;
+    repnod9 -> res16;
+}
