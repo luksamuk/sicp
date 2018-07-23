@@ -228,6 +228,7 @@ For comparision, here is the recursive process:
 #+END_SRC
 
 * Exercise 1.12
+This solution assumes base-0 and valid indexes.
 #+BEGIN_SRC scheme
   (define (pascal-element level n)
     (cond ((or (= n 0)
@@ -236,3 +237,59 @@ For comparision, here is the recursive process:
                                    (1- n))
                    (pascal-element (1- level) n)))))
 #+END_SRC
+* Exercise 1.13
+#+BEGIN_SRC scheme
+  ;; Predefine useful values
+
+  (define *phi* (/ (1+ (sqrt 5)) 2))
+  (define *psi* (/ (1- (sqrt 5)) 2))
+
+  ;; Optimized Fibonacci by iteration, copied from the
+  ;; book. Seemed like a better way to handle this.
+  ;; Protip: don't use the naive implementation to
+  ;; calculate fib(60).
+  (define (fib-opt-iter a b count)
+    (cond ((= count 0) b)
+          (else (fib-opt-iter (+ a b) a (1- count)))))
+
+  (define (fib-opt n)
+    (fib-opt-iter 1 0 n))
+
+
+  ;; Instead of writing our own expt function,
+  ;; we'll use Scheme's expt
+
+  ;; Fibonacci by approximation.
+
+  ;; NOTE: For some reason, this seems to only work
+  ;; for n > 1 (meaning, the first value is never found
+  ;; to be 1). Could be an arbitrary computational error,
+  ;; but I'll ask around to make sure. Could be a mistake
+  ;; of mine.
+
+  (define (fib-approx n)
+    (inexact->exact
+     (round (/ (- (expt *phi* n)
+                  (expt *psi*  n))
+               (sqrt 5)))))
+
+
+  ;; Now we try to prove that these two processes
+  ;; calculate the same number for as much as you
+  ;; want.
+
+  (define (fib-prove-iter count max)
+    (if (> count max)
+        #t
+        (let ((iter-result (fib-opt count))
+              (appr-result (fib-approx count)))
+          (if (= iter-result appr-result)
+              (fib-prove-iter (1+ count) max)
+              (cons iter-result (cons appr-result count))))))
+
+  ;; About this arbitrary 2... look at the note above.
+  (define (fib-prove iterations)
+    (if (>= iterations 2)
+        (fib-prove-iter 2 iterations)))
+#+END_SRC
+* Exercise 1.14
