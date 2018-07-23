@@ -4,6 +4,8 @@
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
 
+All exercises involving actual programming were tested under Chez Scheme.
+
 * Exercise 1.1
 #+BEGIN_SRC text
   10 ;; => 10
@@ -81,7 +83,9 @@ the predicate, the consequent and the alternative, before actually getting to th
 statement. This will result in the calling of =sqrt-iter=, even when the program is supposed to
 stop.
 
-* Exercise 1.7
+* Exercise 1.7 (problematic)
+NOTE: This solution might still not work so well for small numbers.
+
 =good-enough?=, as currently given, can easily be show to not work on very small or very large
 numbers, since it uses a fixed number (=0.001=) as a way to determine if the difference is small
 enough. This means that calculations such as
@@ -125,6 +129,11 @@ In this example, we use the =good-enough?= algorithm from the previous exercise.
 changes, when compared to the square root algorithm, happen on the =improve-cb= procedure.
 
 #+BEGIN_SRC scheme
+  ;; We borrow square from the book
+  (define (square x)
+    (* x x))
+
+
   (define (good-enough? guess old-guess)
     (< (abs (- guess old-guess))
        (/ guess 10000)))
@@ -215,11 +224,9 @@ Now we compute a procedure that calculates =f(n)= through an iterative process.
 
   (define (f n)
     (cond ((< n 3) n)
-          (else (f-iter 2 0 1 2))))
-#+END_SRC
+          (else (f-iter n 2 0 1 2))))
 
-For comparision, here is the recursive process:
-#+BEGIN_SRC scheme
+  ;; Recursive implementation, for comparision
   (define (f-recursive n)
     (cond ((< n 3) n)
           (else (+ (f-recursive (1- n))
