@@ -31,6 +31,28 @@ math before trying to answer the exercise as well.
 I won't lie, I'll try to get some tips here and there from a few online communities which I think will be of great help, however I'm not going to copy anything
 from anyone, as it will simply not help me grow in terms of knowledge -- and you should follow the same principle.
 
+* Software
+
+Some very reliable software was used to write these problems in a proper way, which I am going to
+disclose here:
+
+- Emacs editor;
+- Org, an open document format for taking notes and schedule tasks;
+- Graphviz, a tool for building graphs;
+- =org-mode=, =graphviz-dot-mode= and =org-babel=, Emacs buffer modes for treating Org files, Graphviz Dot files and handling source code embedded in Org files on Emacs, respectively;
+- LaTeX and htmlize for exporting Org into PDF and HTML files.
+
+All source files for this notebook are stored in this repository, including graph images generated
+for some of the exercises.
+
 * Copyright
 
-There is none. This is public knowledge, not software per se. Use whatever I write here at your own risk.
+The text in this notebook has no license per se, since it is not software. Therefore, it can be considered public knowledge,
+which you can use at your own risk.
+
+The original code that I've written and that is included on the notebooks, however, has a license, unless it is copied
+from the book. These are distributed under the MIT License, which means you can do whatever you want with it, but I cannot
+be held responsible for any damage it may cause someday, as stated in the license itself -- not that it will or can cause
+any damage, of course.
+
+#+INCLUDE: "LICENSE" :only-contents t src text
