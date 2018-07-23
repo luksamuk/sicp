@@ -290,7 +290,7 @@ This solution assumes base-0 and valid indexes.
               (appr-result (fib-approx count)))
           (if (= iter-result appr-result)
               (fib-prove-iter (1+ count) max)
-              (cons iter-result (cons appr-result count))))))
+              #f))))
 
   ;; About this arbitrary 2... look at the note above.
   (define (fib-prove iterations)
@@ -302,14 +302,15 @@ This solution assumes base-0 and valid indexes.
 As the amount of the change grows, the algorithm seems to have both orders of space
 and number of steps equal to \theta{}(n²).
 
-Below is a diagram for the expasion of =count-change=.
+Below is a diagram for the expansion of =count-change=.
 
 #+CAPTION: Expansion of the =count-change= function with number 11.
 #+NAME:    fig:ex1-14
 [[./graphs/ex1-14.png]]
 
 * Exercise 1.15
-a. The procedure =p= is applied five times.
-
-b. The procedure seems to have both orders of space and number of steps equal
+** a
+The procedure =p= is applied five times.
+** b
+The procedure seems to have both orders of space and number of steps equal
 to \theta{}(log(a)).
