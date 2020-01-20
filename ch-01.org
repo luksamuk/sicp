@@ -234,14 +234,15 @@ Now we compute a procedure that calculates =f(n)= through an iterative process.
 
 * Exercise 1.12
 This solution assumes base-0 and valid indexes.
-#+BEGIN_SRC scheme
+#+begin_src scheme
   (define (pascal-element level n)
     (cond ((or (= n 0)
                (= n level)) 1)
           (else (+ (pascal-element (1- level)
                                    (1- n))
                    (pascal-element (1- level) n)))))
-#+END_SRC
+#+end_src
+
 * Exercise 1.13
 #+BEGIN_SRC scheme
   ;; Predefine useful values
@@ -314,3 +315,213 @@ The procedure =p= is applied five times.
 ** b
 The procedure seems to have both orders of space and number of steps equal
 to \theta{}(log(a)).
+* Exercise 1.22
+
+#+begin_src scheme
+(define (search-for-primes start end)
+  (cond ((>= start end) '())
+        ((even? start)
+         (search-for-primes (1+ start) end))
+        (else (begin
+                (timed-prime-test start)
+                (search-for-primes (+ start 2) end)))))
+#+end_src
+
+* Exercise 1.23
+
+#+begin_src scheme
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (define (next divisor)
+    (if (= divisor 2) 3 (+ divisor 2)))
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+#+end_src
+
+#+begin_src scheme
+(map smallest-divisor (cdr (iota 1000)))
+#+end_src
+
+* Exercise 1.26
+
+The function computes =(expmod base (/ exp 2) m)= twice for every
+squaring operation, which previously only computed this value once and
+then squared it. This behaviour increases the complexity of the
+function.
+
+* Exercise 1.27
+
+#+begin_src scheme
+(define (fermat-test n)
+  (fermat-test-iter 1 n))
+
+(define (fermat-test-iter a n) ; a^n cong to a mod n
+  (cond ((>= a n) #t)
+        ((= (remainder (expt a n) n)
+            (remainder a n))
+         (fermat-test-iter (1+ a) n))
+        (else #f)))
+#+end_src
+
+#+begin_src scheme
+(map fermat-test '(561 1105 1729 2465 2821 6601))
+#+end_src
+
+* Exercise 1.28
+
+#+begin_src scheme
+(define (expmod base exp m)
+  (define (trivial? value)
+    (and (not (= value 1))
+         (not (= value (1- m)))
+         (= (square value) (remainder 1 m))))
+  (define (zero-or-mod value)
+    (if (trivial? value)
+        0
+        (remainder value m)))
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (zero-or-mod
+          (square (expmod base (/ exp 2) m))))
+        (else
+         (remainder (* base (expmod base (1- exp) m))
+                    m))))
+
+(define (miller-rabin-test n)
+  (define (try-it a)
+    (not (zero? (expmod a (1- n) n))))
+  (try-it (1+ (random (1- n)))))
+#+end_src
+
+#+begin_src scheme
+;; Extras
+(define (square x)
+  (* x x))
+
+(define (fast-prime-mr? n times)
+  (if (not (and (even? n) (> n 2)))
+      (cond ((= times 0) #t)
+            ((miller-rabin-test n)
+             (fast-prime-mr? n (1- times)))
+            (else #f))
+      #f))
+
+(define (remove-if pred lst)
+  (cond ((null? lst) lst)
+        ((pred (car lst))
+         (remove-if pred (cdr lst)))
+        (else (cons (car lst)
+                    (remove-if pred (cdr lst))))))
+#+end_src
+
+#+begin_src scheme
+(let ((num-tests 1000)
+      (range     1000))
+  (remove-if (lambda (n)
+               (or (and (even? n)
+                        (> n 2))
+                   (not (fast-prime-mr? n num-tests))))
+             (cddr (iota range))))
+#+end_src
+
+* Exercise 1.29
+
+#+begin_src scheme
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+#+end_src
+
+#+begin_src scheme
+(define (simpson-rule f a b n)
+  (let ((h (/ (- b a) n)))
+    (define (simpson-y k)
+      (f (+ a (* k h))))
+    (define (simpson-term k)
+      (* (+ 2 (* 2 (remainder k 2)))
+         (simpson-y k)))
+    (* (/ h 3)
+       (+ (simpson-y 0)
+          (simpson-y n)
+          (sum simpson-term 1 1+ (1- n))))))
+#+end_src
+
+#+begin_src scheme
+(define (cube x)
+  (* x x x))
+
+(map (lambda (n)
+       (simpson-rule cube 0 1 n))
+     '(100 1000))
+#+end_src
+
+* Exercise 1.30
+
+#+begin_src scheme
+(define (sum term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ (term a) result))))
+  (iter a 0))
+#+end_src
+
+* Exercise 1.31
+
+** a
+
+Linear recursive process
+
+#+begin_src scheme
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product term (next a) next b))))
+#+end_src
+
+Factorial
+
+#+begin_src scheme
+(define (factorial n)
+  (product (lambda (x) x) 1 1+ n))
+#+end_src
+
+Computing π
+
+#+begin_src scheme
+(define (compute-pi steps)
+  (define (numer-term n)
+    (if (odd? n)
+        (1+ n)
+        (+ n 2)))
+  (define (denom-term n)
+    (if (odd? n)
+        (+ n 2)
+        (1+ n)))
+  (/ (product numer-term 1 1+ steps)
+     (product denom-term 1 1+ steps)
+     0.25))
+#+end_src
+
+** b
+
+Iterative process
+
+#+begin_src scheme
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* (term a) result))))
+  (iter a 1))
+#+end_src
+
