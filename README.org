@@ -9,7 +9,7 @@
 
 Missing: Exercises 1.16 - 1.21.
 
-Currently heading to Exercise 1.35.
+Currently heading to Exercise 1.40.
 
 * What?
 
