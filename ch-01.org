@@ -617,8 +617,8 @@ them.
 
 ** Results
 
-Total remainder executions in normal-order evaluation: 18
-Total remainder executions in applicative order evaluation: 4
+- Total remainder executions in normal-order evaluation: 18
+- Total remainder executions in applicative order evaluation: 4
 
 * Exercise 1.21
 
@@ -1192,7 +1192,235 @@ Iterative process
   (repeated smooth n))
 #+end_src
 
-* TODO Exercise 1.45
+* Exercise 1.45
+
+Let's start by defining some utility functions which we'll need.
+
+#+name: 1_45_setup
+#+begin_src scheme
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+(define (average a b)
+  (/ (+ a b) 2))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (1- n)))))
+
+(define (square x)
+  (* x x))
+
+(define (cube x)
+  (* x x x))
+
+#+end_src
+
+The square root procedure can be achieved by average damping the
+procedure $y \mapsto \frac{x}{y}$ for a given $x$ value.
+
+#+begin_src scheme
+(define (sqrt1 x)
+  (fixed-point (average-damp (lambda (y) (/ x y)))
+               1.0))
+#+end_src
+
+For cube roots, we can average damp $y \mapsto \frac{x}{y^2}\, \forall\,
+x$.
+
+#+begin_src scheme
+(define (cbrt x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y))))
+               1.0))
+#+end_src
+
+Fourth roots do not converge by the same method. However, average
+damping twice does the trick.
+
+#+begin_src scheme
+(define (fthrt x)
+  (fixed-point ((repeated average-damp 2)
+                (lambda (y) (/ x (cube y))))
+               1.0))
+#+end_src
+
+Now we produce some experiments.
+
+We need to generate the procedure for an /nth/ root, by average damping
+the procedure $y \mapsto \frac{x}{y^{n-1}}$.
+
+Let's see if average damping twice converges for fifth roots.
+
+#+begin_src scheme
+(define (fifrt x)
+  (fixed-point ((repeated average-damp 2)
+                (lambda (y) (/ x (expt y 4))))
+               1.0))
+#+end_src
+
+It does. =(fifrt 32)= gives a result of =2.000001512995761=. Pretty close
+to =2=.
+
+Now let's experiment with the sixth root.
+
+#+begin_src scheme
+(define (sixrt x)
+  (fixed-point ((repeated average-damp 2)
+                (lambda (y) (/ x (expt y 5))))
+               1.0))
+#+end_src
+
+This one also converges. =(sixrt 729)= results in =2.999996785898161=,
+close to =3=.
+
+Now for the seventh root.
+
+#+begin_src scheme
+(define (seprt x)
+  (fixed-point ((repeated average-damp 2)
+                (lambda (y) (/ x (expt y 6))))
+               1.0))
+#+end_src
+
+=(seprt 78125)= results in =5.000004267274231=. Close to =5=.
+
+Eight root /does not converge/! We need to average damp *three times* for
+it to work; now =(eighrt 390625)= gives =5.000000000000416=, close to =5=.
+
+#+begin_src scheme
+(define (eigrt x)
+  (fixed-point ((repeated average-damp 3)
+                (lambda (y) (/ x (expt y 7))))
+               1.0))
+#+end_src
+
+So far it seems that, for every $n$ multiple of four, the number of
+average dampings increase by one. Let's test this theory with a
+general procedure.
+
+We'll also be using the procedure =div=, which gives the integer
+division of two numbers. Mathematically, we have
+
+\begin{equation*}
+    \text{nthrt}(n, x) \approx
+    \text{fixpoint}\left(
+        \text{avgd}^{1 + (n \text{ div } 4)}\left[y \mapsto \frac{x}{y^{n - 1}}\right], 1
+        \right)
+\end{equation*}
+
+#+name: 1_45_nthrt
+#+begin_src scheme :noweb strip-export
+<<1_45_setup>>
+(define (nthrt n x)
+  (fixed-point ((repeated average-damp (1+ (div n 4)))
+                (lambda (y) (/ x (expt y (1- n)))))
+               1.0))
+#+end_src
+
+This procedure seems to work well for all numbers. Below I defined
+some tests and ran them as an org-mode script.
+
+#+name: 1_45_test_def
+#+begin_src scheme :noweb strip-export
+<<1_45_nthrt>>
+(define (test-roots number range)
+  (map (lambda (x)
+         (let ((result (nthrt x (expt number x))))
+           (map display
+                (list (if (< x 10) " " "")
+                      x
+                      (let ((order (remainder x 10)))
+                        (cond ((= order 1) "st")
+                              ((= order 2) "nd")
+                              (else "th")))
+                      " root of "
+                      number
+                      "^"
+                      x
+                      (if (< x 10) " " "")
+                      " = "
+                      result))
+           (newline)
+           result))
+       (cdr (iota range))))
+#+end_src
+
+Interestingly, Chez Scheme seems to run these tests asynchronously.
+
+#+begin_src scheme :noweb strip-export :results output :cache yes :exports both
+<<1_45_test_def>>
+(test-roots 29 51)
+#+end_src
+
+#+RESULTS[79d171d38eeb5a4fb459fd0b153c0aaadee9c0af]:
+#+begin_example
+49th root of 29^49 = 29.001661527357292
+50th root of 29^50 = 29.001623947207396
+47th root of 29^47 = 29.0008527351452
+48th root of 29^48 = 29.001698691584636
+45th root of 29^45 = 29.000900323838785
+46th root of 29^46 = 29.000878311390686
+43th root of 29^43 = 29.00045753710591
+44th root of 29^44 = 29.00091916724035
+41st root of 29^41 = 29.00048840814617
+42nd root of 29^42 = 29.000475618547433
+39th root of 29^39 = 29.000248410052485
+40th root of 29^40 = 29.000496200535856
+37th root of 29^37 = 29.000266766220143
+38th root of 29^38 = 29.00025595095766
+35th root of 29^35 = 29.00013415997967
+36th root of 29^36 = 29.000271369138332
+33th root of 29^33 = 29.000142273618366
+34th root of 29^34 = 29.000132394340277
+31st root of 29^31 = 29.00007110241029
+32nd root of 29^32 = 29.000145417732796
+29th root of 29^29 = 29.00007350085268
+30th root of 29^30 = 29.00006708757493
+27th root of 29^27 = 29.00003143256827
+28th root of 29^28 = 29.00007319088057
+25th root of 29^25 = 29.000036365379778
+26th root of 29^26 = 29.00003725483326
+23th root of 29^23 = 29.000011841469654
+24th root of 29^24 = 29.000037032565906
+21st root of 29^21 = 29.0000156147361
+22nd root of 29^22 = 29.000016373930023
+19th root of 29^19 = 29.000005526749263
+20th root of 29^20 = 29.00001599654381
+17th root of 29^17 = 29.00000415600814
+18th root of 29^18 = 29.000006721401753
+15th root of 29^15 = 29.000000129806928
+16th root of 29^16 = 29.00000630999765
+13th root of 29^13 = 29.000001349391844
+14th root of 29^14 = 29.00000054147541
+11st root of 29^11 = 29.0000021591665
+12nd root of 29^12 = 29.000003084211684
+ 9th root of 29^9  = 29.00000069054954
+10th root of 29^10 = 28.999999205552584
+ 7th root of 29^7  = 29.000003820232433
+ 8th root of 29^8  = 29.0
+ 5th root of 29^5  = 29.0000005410404
+ 6th root of 29^6  = 29.00000195366421
+ 3th root of 29^3  = 29.00000228321477
+ 4th root of 29^4  = 29.0
+ 1st root of 29^1  = 28.999993324279785
+ 2nd root of 29^2  = 29.00000000000003
+#+end_example
 
 * Exercise 1.46
 

@@ -12,9 +12,6 @@
 
 ** Progress
 
-Missing exercises:
-- 1.45
-
 Currently heading to Chapter 2.
 
 * What?
