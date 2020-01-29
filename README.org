@@ -8,7 +8,7 @@
 * Index
 
 - [[./ch-01.org][Chapter 1]]
-- Chapter 2
+- [[./ch-02.org][Chapter 2]]
 
 ** Progress
 

@@ -1,0 +1,6 @@
+#+TITLE: Building Abstractions with Data
+#+AUTHOR: Lucas S. Vieira
+#+LANGUAGE: en-us
+#+OPTIONS: toc:nil
+#+STARTUP: latexpreview showeverything inlineimages
+
