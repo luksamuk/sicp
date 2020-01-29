@@ -5,11 +5,22 @@
 #+LANGUAGE: en-us
 #+OPTIONS: toc:nil
 
-*** Progress
+* Index
 
-Missing: Exercises 1.16 - 1.21.
+- [[./ch-01.org][Chapter 1]]
+- Chapter 2
 
-Currently heading to Exercise 1.40.
+** Progress
+
+Missing exercises:
+- 1.16
+- 1.17
+- 1.18
+- 1.19
+- 1.20
+- 1.21
+
+Currently heading to Chapter 2.
 
 * What?
 

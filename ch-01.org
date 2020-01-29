@@ -340,6 +340,13 @@ The procedure =p= is applied five times.
 ** b
 The procedure seems to have both orders of space and number of steps equal
 to \theta{}(log(a)).
+
+* TODO Exercise 1.16
+* TODO Exercise 1.17
+* TODO Exercise 1.18
+* TODO Exercise 1.19
+* TODO Exercise 1.20
+* TODO Exercise 1.21
 * Exercise 1.22
 
 #+begin_src scheme
@@ -825,4 +832,89 @@ Iterative process
                    (- (square x))))
              (lambda (i) (1- (* 2 i)))
              k))
+#+end_src
+
+* Exercise 1.40
+
+#+begin_src scheme
+(define (cubic a b c)
+  (lambda (x)
+    (+ (cube x)
+       (* a (square x))
+       (* b x)
+       c)))
+#+end_src
+
+* Exercise 1.41
+
+#+begin_src scheme
+(define (double f)
+  (lambda (x) (f (f x))))
+#+end_src
+
+* Exercise 1.42
+
+#+begin_src scheme
+(define (compose f g)
+  (lambda (x) (f (g x))))
+#+end_src
+
+* Exercise 1.43
+
+#+begin_src scheme
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (1- n)))))
+#+end_src
+
+* Exercise 1.44
+
+#+begin_src scheme
+(define dx 0.000001) ; some epsilon
+
+(define (smooth f)
+  (define (average a b c)
+    (/ (+ a b c) 3))
+  (lambda (x)
+    (average (f (- x dx))
+             (f x)
+             (f (+ x dx)))))
+
+(define (smooth-n-fold x n)
+  (repeated smooth n))
+#+end_src
+
+* TODO Exercise 1.45
+
+* Exercise 1.46
+
+#+begin_src scheme
+(define (iterative-improve good-enough? improve)
+  (lambda (initial-guess)
+    (define (iter guess)
+      (if (good-enough? guess)
+          guess
+          (iter (improve guess))))
+    (iter initial-guess)))
+#+end_src
+
+#+begin_src scheme
+(define (sqrt-iter-improve x)
+  (define (good-enough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  ((iterative-improve good-enough? improve) 1.0))
+#+end_src
+
+#+begin_src scheme
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (improve x)
+    (f x))
+  (define (try x)
+    (< (abs (- x (improve x))) tolerance))
+  ((iterative-improve try improve) first-guess))
 #+end_src
