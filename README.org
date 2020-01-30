@@ -9,10 +9,11 @@
 
 - [[./ch-01.org][Chapter 1]]
 - [[./ch-02.org][Chapter 2]]
+- Chapter 3
+- Chapter 4
+- Chapter 5
 
-** Progress
-
-Currently heading to Chapter 2.
+Currently at Chapter 2.
 
 * What?
 
