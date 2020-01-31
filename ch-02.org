@@ -281,7 +281,8 @@ divisible by 3, for example.
 
 * Exercise 2.6
 
-#+begin_src scheme :results output
+#+name: church_numbers
+#+begin_src scheme
 ;; Given by exercise
 (define zero (lambda (f) (lambda (x) x)))
 
@@ -299,9 +300,14 @@ divisible by 3, for example.
     (lambda (x) ((a f) ((b f) x)))))
 
 
-;; Tests
 (define (church->number f)
   ((f 1+) 0))
+#+end_src
+
+Tests:
+
+#+begin_src scheme :results output
+<<church_numbers>>
 
 (define (run-test)
   (let ((tests (list zero                         ; 0
@@ -323,7 +329,7 @@ divisible by 3, for example.
 (run-test)
 #+end_src
 
-#+RESULTS[462915ae83a57277b24c2cafb79d335b22e47b45]:
+#+RESULTS[7a02c36f9b079186f26d6ec00c7734ec111df169]:
 #+begin_example
 
 0
