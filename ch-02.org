@@ -344,3 +344,146 @@ Tests:
 6
 #+end_example
 
+* Exercise 2.7
+
+Given by section and exercises:
+
+#+name: interval_funs
+#+begin_src scheme
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x) (lower-bound y))
+                 (+ (upper-bound x) (upper-bound y))))
+
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x) (lower-bound y)))
+        (p2 (* (lower-bound x) (upper-bound y)))
+        (p3 (* (upper-bound x) (lower-bound y)))
+        (p4 (* (upper-bound x) (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+
+(define (div-interval x y)
+  (mul-interval x
+                (make-interval (/ 1.0 (upper-bound y))
+                               (/ 1.0 (lower-bound y)))))
+#+end_src
+
+Answer:
+
+#+name: interval_def
+#+begin_src scheme
+<<interval_funs>>
+
+;; Given by exercise
+(define (make-interval a b) (cons a b))
+
+(define (upper-bound i) (cdr i))
+(define (lower-bound i) (car i))
+#+end_src
+
+* Exercise 2.8
+
+#+name: interval_sub
+#+begin_src scheme
+<<interval_def>>
+
+(define (sub-interval x y)
+  (add-interval x
+                (make-interval (- (upper-bound y))
+                               (- (lower-bound y)))))
+#+end_src
+
+* Exercise 2.9
+
+Given definition:
+
+#+name: interval_width
+#+begin_src scheme
+<<interval_sub>>
+
+(define (width i)
+  (/ (- (upper-bound i)
+        (lower-bound i))
+     2))
+#+end_src
+
+We define a few intervals and their sum and multiplication, for
+experimentation purposes.
+
+#+name: interval_examples
+#+begin_src scheme
+<<interval_width>>
+
+(define a (make-interval 0 5))
+(define b (make-interval 2 4))
+(define z (add-interval a b))
+(define w (mul-interval a b))
+#+end_src
+
+By doing normal-order evaluation, we can verify the values of widths
+for =a=, =b= and =z=:
+
+#+begin_example
+> (width a)
+> (/ (- 5 0) 2)
+> 5/2
+
+> (width b)
+> (/ (- 4 2) 2)
+> 2
+
+> (width z)
+> (/ (- 9 2) 2)
+> 7/2
+#+end_example
+
+It seems that the width of the sum of two intervals =a= and =b= correspond
+to doubling the width of those intervals, summing them, and then
+dividing the result by two again. We can write a procedure for this
+behaviour.
+
+#+name: interval_sum_width
+#+begin_src scheme
+<<interval_examples>>
+
+(define (sum-width x y)
+  (/ (+ (* 2 (width x))
+        (* 2 (width y)))
+     2))
+#+end_src
+
+By testing, we verify that this is indeed true:
+
+#+begin_src scheme :results output
+<<interval_sum_width>>
+
+(let ((width-z (width z))
+      (width-sum (sum-width a b)))
+  (display width-z)
+  (display " = ")
+  (display width-sum)
+  (display "?    ")
+  (display (= width-z width-sum))
+  (newline))
+#+end_src
+
+#+RESULTS[3267be305966869e1c43b06211ef5b56d027603a]:
+: 7/2 = 7/2?    #t
+
+Indeed, this is not true for multiplications of intervals:
+
+#+begin_src scheme :results output
+<<interval_sum_width>>
+
+(let ((width-w (width w))
+      (width-sum (sum-width a b)))
+  (display width-w)
+  (display " = ")
+  (display width-sum)
+  (display "?    ")
+  (display (= width-w width-sum))
+  (newline))
+#+end_src
+
+#+RESULTS[c0d31db70d42beefa59b91b31e3756e13908671a]:
+: 10 = 7/2?    #f
